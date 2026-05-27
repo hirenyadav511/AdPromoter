@@ -9,16 +9,45 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Setup Axios defaults
+  // Setup basic Axios defaults
   axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-  axios.defaults.withCredentials = true;
+
+  // Axios interceptor to attach token to every request
+  useEffect(() => {
+    const interceptor = axios.interceptors.request.use(
+      (config) => {
+        const token = localStorage.getItem('adpromoter_user_token');
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
+
+    return () => axios.interceptors.request.eject(interceptor);
+  }, []);
 
   const refreshUser = async () => {
+    const token = localStorage.getItem('adpromoter_user_token');
+    
+    if (!token) {
+      setUser(null);
+      setLoading(false);
+      return;
+    }
+
     try {
       const { data } = await axios.get('/api/auth/me');
-      setUser(data);
+      if (data) {
+        setUser(data);
+      } else {
+        // Token might be invalid or expired
+        logoutLocally();
+      }
     } catch (error) {
-      setUser(null);
+      console.error('Failed to fetch user session:', error);
+      logoutLocally();
     } finally {
       setLoading(false);
     }
@@ -30,19 +59,35 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const { data } = await axios.post('/api/auth/login', { email, password });
+    if (data.token) {
+      localStorage.setItem('adpromoter_user_token', data.token);
+    }
     setUser(data);
     return data;
   };
 
   const register = async (name, email, password) => {
     const { data } = await axios.post('/api/auth/register', { name, email, password });
+    if (data.token) {
+      localStorage.setItem('adpromoter_user_token', data.token);
+    }
     setUser(data);
     return data;
   };
 
-  const logout = async () => {
-    await axios.post('/api/auth/logout');
+  const logoutLocally = () => {
+    localStorage.removeItem('adpromoter_user_token');
     setUser(null);
+  };
+
+  const logout = async () => {
+    try {
+      await axios.post('/api/auth/logout');
+    } catch (err) {
+      console.error('Server logout failed, but clearing local session anyway');
+    } finally {
+      logoutLocally();
+    }
   };
 
   return (

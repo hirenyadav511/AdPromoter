@@ -82,6 +82,7 @@ const Campaigns = () => {
               <th className="p-4 font-medium text-gray-900 dark:text-gray-100">Platform</th>
               <th className="p-4 font-medium text-gray-900 dark:text-gray-100">Budget</th>
               <th className="p-4 font-medium text-gray-900 dark:text-gray-100">Status</th>
+              <th className="p-4 font-medium text-gray-900 dark:text-gray-100">Date & Time</th>
               <th className="p-4 font-medium text-gray-900 dark:text-gray-100 text-right">Actions</th>
             </tr>
           </thead>
@@ -98,12 +99,13 @@ const Campaigns = () => {
                   <td className="p-4"><Skeleton className="h-4 w-20" /></td>
                   <td className="p-4"><Skeleton className="h-4 w-16" /></td>
                   <td className="p-4"><Skeleton className="h-6 w-20" /></td>
+                  <td className="p-4"><Skeleton className="h-4 w-24" /></td>
                   <td className="p-4 text-right"><Skeleton className="h-4 w-12 ml-auto" /></td>
                 </tr>
               ))
             ) : campaigns.length === 0 ? (
               <tr>
-                <td colSpan="5" className="p-8 text-center text-gray-500">
+                <td colSpan="6" className="p-8 text-center text-gray-500">
                   No campaigns found. Create one to get started!
                 </td>
               </tr>
@@ -128,6 +130,15 @@ const Campaigns = () => {
                     }`}>
                       {camp.status.charAt(0).toUpperCase() + camp.status.slice(1)}
                     </span>
+                  </td>
+                  <td className="p-4 text-gray-600 dark:text-gray-400 text-xs">
+                    {new Date(camp.createdAt).toLocaleString(undefined, { 
+                      year: 'numeric', 
+                      month: 'short', 
+                      day: 'numeric',
+                      hour: '2-digit', 
+                      minute: '2-digit' 
+                    })}
                   </td>
                   <td className="p-4 text-right space-x-2">
                     <button

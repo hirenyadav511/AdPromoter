@@ -1,5 +1,8 @@
 import User from '../models/User.js';
 import generateToken from '../utils/generateToken.js';
+import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
+import sendEmail from '../utils/sendEmail.js';
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
@@ -21,7 +24,7 @@ export const registerUser = async (req, res) => {
     });
 
     if (user) {
-      generateToken(res, user._id);
+      const token = generateToken(user._id);
       res.status(201).json({
         _id: user._id,
         name: user.name,
@@ -30,6 +33,7 @@ export const registerUser = async (req, res) => {
         subscriptionPlan: user.subscriptionPlan,
         paymentStatus: user.paymentStatus,
         expiryDate: user.expiryDate,
+        token,
       });
     } else {
       res.status(400).json({ message: 'Invalid user data' });
@@ -51,12 +55,13 @@ export const loginUser = async (req, res) => {
     if (email === 'admin@adpromoter.com' && password === 'admin123') {
       console.log('👑 Admin Login (Hardcoded Success)');
       const adminId = 'admin_hardcoded_id';
-      generateToken(res, adminId);
+      const token = generateToken(adminId);
       return res.json({
         _id: adminId,
         name: 'System Admin',
         email: 'admin@adpromoter.com',
         role: 'admin',
+        token,
       });
     }
 
@@ -72,7 +77,7 @@ export const loginUser = async (req, res) => {
 
     if (isMatch) {
       console.log('🎉 User Login Success:', email);
-      generateToken(res, user._id);
+      const token = generateToken(user._id);
       res.json({
         _id: user._id,
         name: user.name,
@@ -81,6 +86,7 @@ export const loginUser = async (req, res) => {
         subscriptionPlan: user.subscriptionPlan,
         paymentStatus: user.paymentStatus,
         expiryDate: user.expiryDate,
+        token,
       });
     } else {
       console.log('❌ Login failed: Incorrect password');
@@ -96,34 +102,36 @@ export const loginUser = async (req, res) => {
 // @route   POST /api/auth/logout
 // @access  Public
 export const logoutUser = (req, res) => {
-  res.cookie('jwt', '', {
-    httpOnly: true,
-    expires: new Date(0),
-  });
   res.status(200).json({ message: 'Logged out successfully' });
 };
 
 // @desc    Get user profile
 // @route   GET /api/auth/me
-// @access  Private
+// @access  Public
 export const getUserProfile = async (req, res) => {
   try {
-    if (!req.user) {
-      return res.status(401).json({ message: 'Not authorized' });
+    let token = null;
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      token = req.headers.authorization.split(' ')[1];
+    }
+    
+    if (!token) {
+      return res.status(200).json(null);
     }
 
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     // Handle hardcoded admin profile
-    if (req.user._id === 'admin_hardcoded_id') {
-      res.json({
+    if (decoded.userId === 'admin_hardcoded_id') {
+      return res.json({
         _id: 'admin_hardcoded_id',
         name: 'System Admin',
         email: 'admin@adpromoter.com',
         role: 'admin',
       });
-      return;
     }
 
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(decoded.userId);
 
     if (user) {
       res.json({
@@ -136,9 +144,69 @@ export const getUserProfile = async (req, res) => {
         expiryDate: user.expiryDate,
       });
     } else {
-      res.status(404).json({ message: 'User not found' });
+      res.status(200).json(null);
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(200).json(null);
+  }
+};
+
+// @desc    Direct Change Password (simplified for demo)
+// @route   POST /api/auth/forgotpassword
+// @access  Public
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    
+    if (!password || password.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      // Return 404 so frontend knows email is wrong
+      return res.status(404).json({ message: 'No account found with this email.' });
+    }
+
+    // Direct password update
+    user.password = password;
+    await user.save();
+
+    res.status(200).json({ message: 'Password changed successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// @desc    Reset Password
+// @route   PUT /api/auth/resetpassword/:token
+// @access  Public
+export const resetPassword = async (req, res) => {
+  try {
+    // Get hashed token
+    const resetPasswordToken = crypto
+      .createHash('sha256')
+      .update(req.params.token)
+      .digest('hex');
+
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired token' });
+    }
+
+    // Set new password
+    user.password = req.body.password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    res.status(200).json({ message: 'Password reset successful. Please log in.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
   }
 };
