@@ -33,6 +33,7 @@ export const registerUser = async (req, res) => {
         subscriptionPlan: user.subscriptionPlan,
         paymentStatus: user.paymentStatus,
         expiryDate: user.expiryDate,
+        subscriptionStartDate: user.subscriptionStartDate,
         token,
       });
     } else {
@@ -86,6 +87,7 @@ export const loginUser = async (req, res) => {
         subscriptionPlan: user.subscriptionPlan,
         paymentStatus: user.paymentStatus,
         expiryDate: user.expiryDate,
+        subscriptionStartDate: user.subscriptionStartDate,
         token,
       });
     } else {
@@ -142,6 +144,7 @@ export const getUserProfile = async (req, res) => {
         subscriptionPlan: user.subscriptionPlan,
         paymentStatus: user.paymentStatus,
         expiryDate: user.expiryDate,
+        subscriptionStartDate: user.subscriptionStartDate,
       });
     } else {
       res.status(200).json(null);

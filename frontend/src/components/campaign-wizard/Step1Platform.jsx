@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion';
-import { Search, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
+import { Search, ThumbsUp, Camera, Briefcase, MessageCircle } from 'lucide-react';
 
 const platforms = [
   { id: 'Google', name: 'Google Search', icon: Search, color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-900/20' },
-  { id: 'Facebook', name: 'Facebook Ads', icon: Facebook, color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-900/20' },
-  { id: 'Instagram', name: 'Instagram Stories', icon: Instagram, color: 'text-pink-500', bg: 'bg-pink-50 dark:bg-pink-900/20' },
-  { id: 'LinkedIn', name: 'LinkedIn Sponsored', icon: Linkedin, color: 'text-blue-700', bg: 'bg-blue-50 dark:bg-blue-900/20' },
-  { id: 'Twitter', name: 'Twitter / X', icon: Twitter, color: 'text-sky-500', bg: 'bg-sky-50 dark:bg-sky-900/20' },
+  { id: 'Facebook', name: 'Facebook Ads', icon: ThumbsUp, color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-900/20' },
+  { id: 'Instagram', name: 'Instagram Stories', icon: Camera, color: 'text-pink-500', bg: 'bg-pink-50 dark:bg-pink-900/20' },
+  { id: 'LinkedIn', name: 'LinkedIn Sponsored', icon: Briefcase, color: 'text-blue-700', bg: 'bg-blue-50 dark:bg-blue-900/20' },
+  { id: 'Twitter', name: 'Twitter / X', icon: MessageCircle, color: 'text-sky-500', bg: 'bg-sky-50 dark:bg-sky-900/20' },
 ];
 
 export default function Step1Platform({ formData, handleChange, onNext }) {

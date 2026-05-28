@@ -42,6 +42,23 @@ export const getFallbackResponse = (audience, platform) => {
     description: `Discover our latest products tailored specifically for ${audience || 'our customers'}. Check out our page on ${platform || 'our website'} for amazing deals and updates you won't want to miss!`,
     cta: "Learn More Today",
     hashtags: ["#Offer", "#Discount", "#SpecialDeal"],
-    seoKeywords: ["exclusive offer", "best deals", "new products"]
+    seoKeywords: ["exclusive offer", "best deals", "new products"],
+    scores: {
+      seo: 75,
+      engagement: 70,
+      conversion: 65,
+      quality: 80
+    },
+    predictions: {
+      reach: "5,000 - 10,000 users",
+      budget: "$100 - $300",
+      duration: "7 Days",
+      platform: platform || "Google",
+      confidence: 70
+    },
+    suggestions: [
+      "Review the copy to ensure it aligns with your brand voice.",
+      "Consider adjusting the budget based on actual ad performance."
+    ]
   };
 };

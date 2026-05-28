@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import AIResultCard from '../ai/AIResultCard';
 import AIScoreCard from '../ai/AIScoreCard';
+import AIPredictionsCard from '../ai/AIPredictionsCard';
 import AISuggestions from '../ai/AISuggestions';
 import { Sparkles, Edit2 } from 'lucide-react';
 
@@ -18,11 +19,12 @@ export default function Step4ReviewAI({ aiResults, onNext, onPrev, handleAIGener
         <h2 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center justify-center gap-2">
           <Sparkles className="w-8 h-8 text-indigo-500" /> AI Content Studio
         </h2>
-        <p className="text-gray-500 dark:text-gray-400 mt-2">Review your highly optimized campaign assets.</p>
+        <p className="text-gray-500 dark:text-gray-400 mt-2">Review your highly optimized campaign assets and performance predictions.</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Left Side: Generated Content */}
+        <div className="lg:col-span-7 space-y-4">
           <AIResultCard title="Campaign Title" content={aiResults.title} />
           <AIResultCard title="Ad Description" content={aiResults.description} />
           <AIResultCard title="Call To Action" content={aiResults.cta} />
@@ -33,7 +35,9 @@ export default function Step4ReviewAI({ aiResults, onNext, onPrev, handleAIGener
           </div>
         </div>
         
-        <div className="lg:col-span-1 space-y-4">
+        {/* Right Side: Predictions & Scores */}
+        <div className="lg:col-span-5 space-y-4">
+          <AIPredictionsCard predictions={aiResults.predictions} />
           <AIScoreCard scores={aiResults.scores} />
           <AISuggestions suggestions={aiResults.suggestions} />
           

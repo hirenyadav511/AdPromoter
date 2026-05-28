@@ -1,11 +1,19 @@
 import { motion } from 'framer-motion';
+import { Activity } from 'lucide-react';
 
-const ScoreBar = ({ label, score, colorClass }) => {
+const getColorClass = (score) => {
+  if (score >= 85) return 'bg-green-500';
+  if (score >= 70) return 'bg-yellow-500';
+  return 'bg-red-500';
+};
+
+const ScoreBar = ({ label, score }) => {
+  const colorClass = getColorClass(score);
   return (
     <div className="mb-3 last:mb-0">
       <div className="flex justify-between items-center mb-1">
         <span className="text-xs font-semibold text-gray-600 dark:text-gray-300">{label}</span>
-        <span className="text-xs font-bold text-gray-900 dark:text-gray-100">{score}/100</span>
+        <span className="text-xs font-bold text-gray-900 dark:text-gray-100">{score}%</span>
       </div>
       <div className="w-full h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
         <motion.div 
@@ -29,11 +37,12 @@ const AIScoreCard = ({ scores }) => {
       className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 border border-indigo-100 dark:border-gray-700 rounded-xl p-5 shadow-sm"
     >
       <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-        <span className="text-xl">📊</span> Quality Scores
+        <Activity className="w-5 h-5 text-indigo-500" /> Quality Scores
       </h4>
-      <ScoreBar label="SEO Optimization" score={scores.seo || 0} colorClass="bg-blue-500" />
-      <ScoreBar label="Engagement Potential" score={scores.engagement || 0} colorClass="bg-purple-500" />
-      <ScoreBar label="Ad Quality" score={scores.quality || 0} colorClass="bg-green-500" />
+      <ScoreBar label="SEO Optimization" score={scores.seo || 0} />
+      <ScoreBar label="Engagement Potential" score={scores.engagement || 0} />
+      <ScoreBar label="Conversion Potential" score={scores.conversion || 0} />
+      <ScoreBar label="Ad Quality" score={scores.quality || 0} />
     </motion.div>
   );
 };

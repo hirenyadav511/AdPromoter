@@ -64,7 +64,15 @@ You MUST return ONLY a raw, perfectly formatted JSON object. Do not wrap it in m
   "scores": {
     "seo": 85,
     "engagement": 92,
-    "quality": 88
+    "conversion": 88,
+    "quality": 90
+  },
+  "predictions": {
+    "reach": "10,000 - 15,000 users",
+    "budget": "$300 - $500",
+    "duration": "14 Days",
+    "platform": "Best Platform Name",
+    "confidence": 92
   },
   "suggestions": [
     "Make the title slightly shorter for higher impact.",

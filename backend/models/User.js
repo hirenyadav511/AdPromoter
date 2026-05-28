@@ -40,6 +40,9 @@ const userSchema = new mongoose.Schema({
   expiryDate: {
     type: Date,
   },
+  subscriptionStartDate: {
+    type: Date,
+  },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
 }, { timestamps: true });

@@ -37,6 +37,7 @@ export const processDemoPayment = async (req, res) => {
     user.subscriptionPlan = plan;
     user.paymentStatus = 'completed';
     user.expiryDate = expiryDate;
+    user.subscriptionStartDate = new Date();
 
     // 5. Save to database
     await user.save();
@@ -56,6 +57,7 @@ export const processDemoPayment = async (req, res) => {
         subscriptionPlan: user.subscriptionPlan,
         paymentStatus: user.paymentStatus,
         expiryDate: user.expiryDate,
+        subscriptionStartDate: user.subscriptionStartDate,
       }
     });
   } catch (error) {
