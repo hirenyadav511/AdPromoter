@@ -18,7 +18,12 @@ const httpServer = createServer(app);
 // Initialize Socket.io
 const io = new Server(httpServer, {
   cors: {
-    origin: ['http://localhost:5173', 'http://localhost:5174'],
+    origin: [
+      process.env.FRONTEND_URL,
+      process.env.ADMIN_URL,
+      'http://localhost:5173', 
+      'http://localhost:5174'
+    ].filter(Boolean),
     credentials: true
   }
 });
@@ -36,12 +41,12 @@ app.use(cookieParser());
 
 // Enable CORS for frontend and admin
 const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  process.env.ADMIN_URL,
   'http://localhost:5173',
   'http://localhost:5174',
   'http://127.0.0.1:5173',
-  'http://127.0.0.1:5174',
-  process.env.FRONTEND_URL,
-  process.env.ADMIN_URL
+  'http://127.0.0.1:5174'
 ].filter(Boolean);
 
 app.use(cors({
