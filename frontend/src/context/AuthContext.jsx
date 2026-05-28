@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      const { data } = await axios.get('/api/auth/me');
+      const { data } = await axios.get('/auth/me');
       if (data) {
         setUser(data);
       } else {
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const { data } = await axios.post('/api/auth/login', { email, password });
+    const { data } = await axios.post('/auth/login', { email, password });
     if (data.token) {
       localStorage.setItem('adpromoter_user_token', data.token);
     }
@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (name, email, password) => {
-    const { data } = await axios.post('/api/auth/register', { name, email, password });
+    const { data } = await axios.post('/auth/register', { name, email, password });
     if (data.token) {
       localStorage.setItem('adpromoter_user_token', data.token);
     }
@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post('/api/auth/logout');
+      await axios.post('/auth/logout');
     } catch (err) {
       console.error('Server logout failed, but clearing local session anyway');
     } finally {

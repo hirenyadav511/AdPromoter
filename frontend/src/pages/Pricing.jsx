@@ -103,7 +103,7 @@ const Pricing = () => {
     // Simulate payment gateway delay
     setTimeout(async () => {
       try {
-        await axios.post('/api/payment/demo-success', { plan: selectedPlan });
+        await axios.post('/payment/demo-success', { plan: selectedPlan });
         await refreshUser();
         toast.success('Payment Successful ✅ Subscription updated!');
         setShowModal(false);

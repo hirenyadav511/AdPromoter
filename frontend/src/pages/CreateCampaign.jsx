@@ -47,7 +47,7 @@ const CreateCampaign = () => {
       setAiLoading(true);
       setAiResults(null); 
       
-      const { data } = await axios.post('/api/ai/generate-campaign', {
+      const { data } = await axios.post('/ai/generate-campaign', {
         audience: formData.audience,
         tone: formData.tone,
         platform: formData.platform,
@@ -83,13 +83,13 @@ const CreateCampaign = () => {
       const uploadData = new FormData();
       uploadData.append('media', file);
 
-      const uploadRes = await axios.post('/api/upload', uploadData, {
+      const uploadRes = await axios.post('/upload', uploadData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
       const mediaUrl = uploadRes.data.url;
 
-      await axios.post('/api/campaigns', {
+      await axios.post('/campaigns', {
         ...formData,
         mediaUrl,
       });

@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      const { data } = await axios.get('/api/auth/me');
+      const { data } = await axios.get('/auth/me');
       // Strictly enforce role isolated check
       if (data && data.role === 'admin') {
         setUser(data);
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const { data } = await axios.post('/api/auth/login', { email, password });
+    const { data } = await axios.post('/auth/login', { email, password });
     
     if (data.role !== 'admin') {
       throw new Error('Not authorized as an admin');
@@ -79,7 +79,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post('/api/auth/logout');
+      await axios.post('/auth/logout');
     } catch (error) {
       console.error('Server logout failed, clearing local session anyway');
     } finally {

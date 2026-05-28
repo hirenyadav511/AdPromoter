@@ -16,7 +16,7 @@ const ForgotPassword = () => {
     
     try {
       setLoading(true);
-      const { data } = await axios.post('/api/auth/forgotpassword', { email, password: newPassword });
+      const { data } = await axios.post('/auth/forgotpassword', { email, password: newPassword });
       toast.success(data.message || 'Password changed successfully!');
       setEmail('');
       setNewPassword('');

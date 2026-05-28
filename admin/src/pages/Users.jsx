@@ -22,7 +22,7 @@ const Users = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`/api/admin/users?page=${page}&search=${searchTerm}&limit=10`);
+      const { data } = await axios.get(`/admin/users?page=${page}&search=${searchTerm}&limit=10`);
       setUsers(data.users);
       setPages(data.pages);
       setTotal(data.total);

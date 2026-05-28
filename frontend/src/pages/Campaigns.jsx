@@ -7,7 +7,7 @@ import DashboardLayout from '../components/DashboardLayout';
 import Skeleton from '../components/Skeleton';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const socket = io(import.meta.env.VITE_API_URL, {
+const socket = io(import.meta.env.VITE_SOCKET_URL, {
   withCredentials: true
 });
 
@@ -21,7 +21,7 @@ const Campaigns = () => {
   const fetchCampaigns = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`/api/campaigns/my?page=${page}&limit=5`);
+      const { data } = await axios.get(`/campaigns/my?page=${page}&limit=5`);
       setCampaigns(data.campaigns);
       setPages(data.pages);
       setTotal(data.total);
@@ -49,7 +49,7 @@ const Campaigns = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this campaign?')) {
       try {
-        await axios.delete(`/api/campaigns/${id}`);
+        await axios.delete(`/campaigns/${id}`);
         toast.success('Campaign deleted');
         if (campaigns.length === 1 && page > 1) {
           setPage(page - 1);

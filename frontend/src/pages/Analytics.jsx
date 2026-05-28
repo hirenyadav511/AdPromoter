@@ -16,7 +16,7 @@ const Analytics = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get('/api/dashboard/stats');
+        const { data } = await axios.get('/dashboard/stats');
         setData(data);
       } catch (error) {
         console.error('Error fetching analytics:', error);

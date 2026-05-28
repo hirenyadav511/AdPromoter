@@ -23,7 +23,7 @@ const Campaigns = () => {
   const fetchCampaigns = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`/api/admin/campaigns?page=${page}&status=${filter}&limit=10`);
+      const { data } = await axios.get(`/admin/campaigns?page=${page}&status=${filter}&limit=10`);
       setCampaigns(data.campaigns);
       setPages(data.pages);
       setTotal(data.total);
@@ -44,7 +44,7 @@ const Campaigns = () => {
     setCampaigns(campaigns.map(c => c._id === id ? { ...c, status } : c));
 
     try {
-      const { data } = await axios.put(`/api/admin/campaigns/${id}/status`, { status });
+      const { data } = await axios.put(`/admin/campaigns/${id}/status`, { status });
       console.log('📊 Status update response:', data);
       toast.success(`Campaign marked as ${status}`);
       fetchCampaigns(); // Sync with server
